@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using BlazorAPIClient;
+using BlazorAPIClient.DataServices;
 
 namespace BlazorAPIClient
 {
@@ -21,7 +22,12 @@ namespace BlazorAPIClient
             builder.Services.AddScoped(sp => new HttpClient
             {
                 BaseAddress = new Uri(builder.Configuration["rest_api_base_url"])
+                // BaseAddress = new Uri(builder.Configuration["graphql_base_url"])
             });
+
+            builder.Services.AddHttpClient<IJsonPlaceholderDataService, GraphQlJsonPlaceholderDataService>
+                // (jsonplaceholderds => jsonplaceholderds.BaseAddress = new Uri(builder.Configuration["rest_api_base_url"]));
+                (jsonplaceholderds => jsonplaceholderds.BaseAddress = new Uri(builder.Configuration["graphql_base_url"]));
 
             await builder.Build().RunAsync();
         }
